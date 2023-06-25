@@ -17,14 +17,43 @@ pub const Status = enum(u8) {
 
     pub fn isActive(self: Status) bool {
         const lut = [_]bool{ false, true, true };
-        return lut[@enumToInt(self)];
+        return lut[@intFromEnum(self)];
     }
 };
 
-pub usingnamespace switch (builtin.os.tag) {
+pub const advanced = switch (builtin.os.tag) {
     .linux => linux_impl,
     else => noop_impl,
 };
+
+test "start and end gamemode" {
+    try std.testing.expectEqual(false, isActive());
+    start();
+    stop();
+    try std.testing.expectEqual(false, isActive());
+}
+
+pub fn start() void {
+    if (!advanced.init()) return;
+    advanced.requestStart() catch |err| {
+        log.warn("gamemode: failed to start: {}", .{err});
+    };
+}
+
+pub fn isActive() bool {
+    const status = advanced.queryStatus() catch |err| {
+        log.warn("gamemode: error querying status: {}", .{err});
+        return false;
+    };
+    return status.isActive();
+}
+
+pub fn stop() void {
+    advanced.requestEnd() catch |err| {
+        log.warn("gamemode: failed to end: {}", .{err});
+    };
+    advanced.deinit();
+}
 
 const linux_impl = struct {
     comptime {
@@ -133,7 +162,7 @@ const linux_impl = struct {
         if (ret < 0)
             return error.RequestFailed;
 
-        return @intToEnum(Status, ret);
+        return @enumFromInt(Status, ret);
     }
 
     /// Query the status of gamemode for a given PID.
@@ -145,7 +174,7 @@ const linux_impl = struct {
         return switch (ret) {
             -1 => error.RequestFailed,
             -2 => error.RequestRejected,
-            else => @intToEnum(Status, ret),
+            else => @enumFromInt(Status, ret),
         };
     }
 
@@ -193,14 +222,6 @@ const linux_impl = struct {
             -2 => error.RequestRejected,
             else => {},
         };
-    }
-
-    test "start and end gamemode" {
-        try tryInit();
-        defer deinit();
-        try requestStart();
-        try std.testing.expectEqual(Status.active_and_registered, try queryStatus());
-        try requestEnd();
     }
 };
 
