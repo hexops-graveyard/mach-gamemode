@@ -20,6 +20,53 @@ Used by titles such as DiRT 4, and many Tomb Raider and Total War games, [GameMo
 
 GameMode packages are available for Ubuntu, Debian, Solus, Arch, Gentoo, Fedora, OpenSUSE, Mageia and possibly more.
 
+## Experimental
+
+This is an _experimental_ Mach library, according to our [stability guarantees](https://machengine.org/next/docs/libs/):
+
+> Experimental libraries may have their APIs change without much notice, and you may have to look at recent changes in order to update your code.
+
+[Why this library is not declared stable yet](https://machengine.org/next/docs/libs/experimental/#gamemode)
+
+## Getting started
+
+### Adding dependency
+
+Create a `build.zig.zon` file in your project (replace `$LATEST_COMMIT` with the latest commit hash):
+
+```
+.{
+    .name = "mypkg",
+    .version = "0.1.0",
+    .dependencies = .{
+        .vulkan_zig_generated = .{
+            .url = "https://github.com/hexops/mach-gamemode/archive/$LATEST_COMMIT.tar.gz",
+        },
+    },
+}
+```
+
+Run `zig build` in your project, and the compiler instruct you to add a `.hash = "..."` field next to `.url`.
+
+Then use the dependency in your `build.zig`:
+
+```zig
+...
+pub fn build(b: *Build) void {
+    ...
+    exe.addModule("mach-gamemode", b.dependency("mach_gamemode", .{
+        .target = target,
+        .optimize = optimize,
+    }).module("mach-gamemode"));
+}
+```
+
+You may then `const gamemode = @import("mach-gamemode");` and use it.
+
+### Usage
+
+https://github.com/hexops/mach/issues/820
+
 ## Join the community
 
 Join the Mach community [on Discord](https://discord.gg/XNG3NZgCqp) to discuss this project, ask questions, get help, etc.
