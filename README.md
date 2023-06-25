@@ -65,7 +65,16 @@ You may then `const gamemode = @import("mach-gamemode");` and use it.
 
 ### Usage
 
-https://github.com/hexops/mach/issues/820
+The API is incredibly simple, when you want to start/stop gamemode simply call the function:
+
+```
+gamemode.start();
+gamemode.stop();
+```
+
+No errors are returned; mach-gamemode generally stays silent. If users don't have gamemode, or the platform is not linux, then nothing happens. Only if you have gamemode will it be enabled.
+
+One can check programatically if gamemode is active using `gamemode.isActive()`.
 
 ## Join the community
 
