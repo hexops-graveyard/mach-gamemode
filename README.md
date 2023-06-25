@@ -1,4 +1,4 @@
-# mach/gamemode - leverage Linux gamemode from Zig
+# mach/gamemode - make your Linux games go brrr
 
 `mach/gamemode` allows Linux games written in Zig to _request gamemode be enabled_ if the user's machine already has it installed/present. Otherwise, it simply does nothing (there are no dependencies and your game will still run on all Linux machines that do not have gamemode installed.)
 
