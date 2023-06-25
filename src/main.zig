@@ -128,7 +128,9 @@ const linux_impl = struct {
             .failed => return false,
             .uninit => {
                 tryInit() catch |e| {
-                    log.warn("Loading gamemode: '{}'. Disabling libgamemode support.", .{e});
+                    if (e != error.FileNotFound) {
+                        log.warn("Loading gamemode: '{}'. Disabling libgamemode support.", .{e});
+                    }
                     state = .failed;
                     return false;
                 };
