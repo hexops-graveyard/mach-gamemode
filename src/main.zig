@@ -164,7 +164,7 @@ const linux_impl = struct {
         if (ret < 0)
             return error.RequestFailed;
 
-        return @enumFromInt(Status, ret);
+        return @as(Status, @enumFromInt(ret));
     }
 
     /// Query the status of gamemode for a given PID.
@@ -176,7 +176,7 @@ const linux_impl = struct {
         return switch (ret) {
             -1 => error.RequestFailed,
             -2 => error.RequestRejected,
-            else => @enumFromInt(Status, ret),
+            else => @as(Status, @enumFromInt(ret)),
         };
     }
 
