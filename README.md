@@ -9,4 +9,4 @@ Make your Linux games go brrr
 
 ## Moved
 
-This project has moved into [the Mach standard library](https://machengine.org/engine/stdlib/) (specifically [here](https://github.com/hexops/mach/tree/main/src/gamemode)).
+This project has moved into [the Mach standard library](https://machengine.org/engine/stdlib/) (specifically [here](https://github.com/hexops/mach/blob/main/src/gamemode.zig)).
